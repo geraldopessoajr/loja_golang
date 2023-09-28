@@ -1,0 +1,33 @@
+version: '2'
+services:
+  loja_camisetas_web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - ./:/usr/src/app
+    networks:
+      - dev_network
+    depends_on:
+      - loja_camisetas_mysql
+  loja_camisetas_mysql:
+    image: mysql:8.0
+    container_name: loja_camisetas_mysql
+    restart: always
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '3306:3306'
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - dev_network
+networks:
+  dev_network:
+    external: true
+volumes:
+  database:
+    driver: local
